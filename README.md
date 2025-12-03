@@ -1,11 +1,52 @@
-# ESP32-CAM-Telegram-UXGA-Photo-Trigger
-Stable 1600×1200 capture → Telegram without reboots
-📋 Result Summary
-Resolution: 1600×1200 (UXGA, 2 MP)
-File size: 70-85 kB (jpeg_quality = 10) – good trade-off for CNN training
-No crashes: stack-overflow fixed by lower XCLK & quality, single frame buffer
-Delivery: photo sent to Telegram bot in 1-2 s
-Free RAM: > 180 kB heap, > 1.7 MB PSRAM – headroom for future features
-Button trigger: GPIO 13, debounced, LED flash feedback
-Suitable for collecting a starter dataset for YOLO defect-detection on polished metal cylinders (≤ 80 mm Ø).
-For smaller defects or larger parts upgrade to 5 MP OV5640 or Raspberry Pi HQ camera.
+# 📷 ESP32-CAM Telegram UXGA Photo Trigger
+**Стабильная съёмка 1600×1200 и мгновенная отправка в Telegram без перезагрузок**
+
+---
+
+## 📋 Описание проекта
+
+Проект превращает ESP32-CAM в **автономную фотоловушку**: по нажатию кнопки модуль делает снимок разрешением **1600×1200 (UXGA, 2 Мп)** и **мгновенно отправляет его в Telegram-бота**.  
+Особенность – **отсутствие перезагрузок** даже при большом кадре (~80 кБ) и минимальном остатке свободной памяти.
+
+Решение подходит для:
+- **сбора стартового датасета** для обучения YOLO / других CNN;  
+- **инспекции дефектов** на полированных металлических цилиндрах (Ø ≤ 80 мм);  
+- быстрого прототипа «умной» фотофиксации без SD-карт и проводов.
+
+---
+
+## 🧰 Что нужно
+
+| Компонент | Примечание |
+|-----------|------------|
+| AI-Thinker ESP32-CAM | любая ревизия |
+| Кнопка | на GPIO 13 (внутренний pull-up) |
+| Белый LED | GPIO 4, необязательно |
+| 5 В блок-питания | ≥ 500 мА |
+| Arduino IDE | ядро ESP32 ≥ 2.0.11 |
+
+---
+
+## 🔧 Настройка Arduino IDE
+
+| Параметр | Значение |
+|----------|----------|
+| Board | AI Thinker ESP32-CAM |
+| PSRAM | Enabled |
+| Flash Mode | QIO |
+| Flash Frequency | 80 MHz |
+| Partition Scheme | Huge App (3 MB No OTA / 1 MB SPIFFS) |
+| Upload Speed | 115200 |
+
+---
+
+## ⚙️ Быстрый старт
+
+1. Склонируйте репозиторий  
+2. Откройте `.ino`-файл  
+3. Укажите свои данные:  
+   ```cpp
+   const char* ssid     = "YOUR_WIFI";
+   const char* password = "YOUR_PASS";
+   #define BOT_TOKEN    "123456:ABC..."
+   #define CHAT_ID      "12345678"
